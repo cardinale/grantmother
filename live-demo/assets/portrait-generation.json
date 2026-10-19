@@ -1,7 +1,7 @@
 {
-  "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FhcBC6zrJrYdpLuerHoVQ832qDnI2%2Fimages%2Fimg_1792453722696_7240bf1b.jpeg?alt=media&token=aa0ee0b20357bddae731c6481d62805f",
+  "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FhcBC6zrJrYdpLuerHoVQ832qDnI2%2Fimages%2Fimg_1792453768898_f43b3fa7.jpeg?alt=media&token=81b2b60580c904224a3a29e74b1e0b88",
   "aspectRatio": "1:1",
-  "model": "default",
-  "creditCost": 0.005,
+  "model": "ideogram",
+  "creditCost": 0.015,
   "paidWith": "credits"
 }

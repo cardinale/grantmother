@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grantmother — pitch deck · Universal Celebration Hackathon 2026</title>
+<style>
+@font-face { font-family: "GM Display"; font-weight: 900;
+  src: local("SF Pro Display Black"), local("SFProDisplay-Black"), url("file:///Library/Fonts/SF-Pro-Display-Black.otf") format("opentype"); }
+@font-face { font-family: "GM Display"; font-weight: 700;
+  src: local("SF Pro Display Bold"), local("SFProDisplay-Bold"), url("file:///Library/Fonts/SF-Pro-Display-Bold.otf") format("opentype"); }
+@font-face { font-family: "GM Text"; font-weight: 400;
+  src: local("SF Pro Text Regular"), local("SFProText-Regular"), url("file:///Library/Fonts/SF-Pro-Text-Regular.otf") format("opentype"); }
+@font-face { font-family: "GM Text"; font-weight: 600;
+  src: local("SF Pro Text Semibold"), local("SFProText-Semibold"), url("file:///Library/Fonts/SF-Pro-Text-Semibold.otf") format("opentype"); }
+
+:root {
+  --bg: #1c1c1e; --subtle: #242426; --surface: #2a2a2d; --border: #3a3a3e;
+  --fg: #ffffff; --muted: #a1a1a6; --dim: #6e6e73; --red: #e5322b;
+  --display: "GM Display", "SF Pro Display", -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --text: "GM Text", "SF Pro Text", -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #000000; color: var(--fg); font-family: var(--text); -webkit-font-smoothing: antialiased; }
+
+/* ---------- slide canvas: always 1920x1080, scaled to fit on screen ---------- */
+.slide {
+  width: 1920px; height: 1080px; background: var(--bg); position: relative; overflow: hidden;
+  padding: 120px 140px; display: flex; flex-direction: column;
+}
+@media screen {
+  body { overflow: hidden; height: 100vh; }
+  .slide { position: absolute; left: 50%; top: 50%; transform-origin: center center; display: none; }
+  .slide.active { display: flex; }
+}
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { background: var(--bg); }
+  .slide { page-break-after: always; break-after: page; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .hud { display: none; }
+}
+
+/* ---------- type ---------- */
+.kicker { font-family: var(--text); font-weight: 600; font-size: 30px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 36px; }
+h1, h2, .big { font-family: var(--display); font-weight: 900; letter-spacing: -0.035em; line-height: 0.92; }
+h1 { font-size: 220px; }
+h2 { font-size: 120px; margin-bottom: 56px; }
+.big { font-size: 150px; }
+p.lead { font-size: 46px; line-height: 1.25; color: var(--fg); max-width: 1500px; }
+p.sub { font-size: 34px; line-height: 1.35; color: var(--muted); max-width: 1500px; }
+.muted { color: var(--muted); }
+.dim { color: var(--dim); }
+.footer { position: absolute; left: 140px; right: 140px; bottom: 60px; display: flex; justify-content: space-between; font-size: 22px; color: var(--dim); letter-spacing: 0.04em; }
+.tag { display: inline-block; font-size: 22px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 18px; border-radius: 999px; border: 2px solid var(--border); color: var(--muted); }
+.tag.live { color: var(--fg); border-color: var(--fg); }
+.spacer { flex: 1; }
+
+/* ---------- grids / cards (full-perimeter borders only) ---------- */
+.grid { display: grid; gap: 28px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; padding: 40px 44px; }
+.card h3 { font-family: var(--display); font-weight: 900; font-size: 46px; letter-spacing: -0.02em; margin-bottom: 14px; }
+.card p { font-size: 28px; line-height: 1.35; color: var(--muted); }
+.card .who { font-size: 22px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+
+/* slide 4 pipeline */
+.pipe { grid-template-columns: repeat(3, 1fr); }
+.pipe .card { padding: 32px 36px; }
+.pipe .card h3 { font-size: 40px; }
+.pipe .card p { font-size: 25px; }
+.pipe .card.human { background: var(--fg); border-color: var(--fg); }
+.pipe .card.human h3 { color: #000000; }
+.pipe .card.human p, .pipe .card.human .who { color: #3a3a3e; }
+.rail { display: flex; gap: 28px; margin-top: 28px; }
+.rail .card { flex: 1; background: var(--subtle); padding: 26px 36px; }
+.rail .card p { font-size: 25px; }
+.rail .card strong { color: var(--fg); font-family: var(--display); font-weight: 900; font-size: 30px; letter-spacing: -0.01em; }
+
+/* slide 5 auditor */
+.audit-line { font-family: var(--display); font-weight: 900; letter-spacing: -0.04em; line-height: 0.9; }
+.audit-line .num { color: var(--red); }
+.strike { position: relative; display: inline-block; }
+.strike::after { content: ""; position: absolute; left: -2%; right: -2%; top: 52%; height: 14px; background: var(--red); transform: rotate(-3deg); }
+.verdict { display: inline-block; background: var(--red); color: #ffffff; font-family: var(--display); font-weight: 900; font-size: 64px; letter-spacing: 0.02em; padding: 14px 34px; border-radius: 14px; }
+
+/* slide 6 demo */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+ol.steps { list-style: none; counter-reset: s; }
+ol.steps li { counter-increment: s; font-size: 34px; line-height: 1.3; padding: 18px 0 18px 90px; position: relative; border-top: 1px solid var(--border); }
+ol.steps li:last-child { border-bottom: 1px solid var(--border); }
+ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 12px; font-family: var(--display); font-weight: 900; font-size: 52px; color: var(--dim); }
+ul.plain { list-style: none; }
+ul.plain li { font-size: 30px; line-height: 1.35; color: var(--muted); padding: 10px 0; }
+ul.plain li strong { color: var(--fg); font-weight: 600; }
+
+/* slide 7 sponsors */
+.sponsors { grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.sp { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 26px 28px; display: flex; flex-direction: column; gap: 16px; min-height: 196px; }
+.sp .logo { height: 76px; display: flex; align-items: center; }
+.sp .logo img { max-height: 76px; max-width: 250px; object-fit: contain; }
+.sp .nm { font-family: var(--display); font-weight: 900; font-size: 44px; letter-spacing: -0.02em; margin-left: 20px; }
+.sp.build .nm { font-size: 36px; }
+.sp p { font-size: 23px; line-height: 1.3; color: var(--muted); }
+.sp.build { background: var(--subtle); min-height: 170px; }
+.sp.build .logo { height: 60px; }
+.sp.build .logo img { max-height: 60px; max-width: 210px; }
+.rowlabel { font-size: 24px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin: 6px 0 14px; }
+
+/* slide 8 */
+.three { grid-template-columns: repeat(3, 1fr); }
+.three .card { padding: 48px; }
+.three .card .big { font-size: 96px; margin-bottom: 24px; }
+.three .card p { font-size: 30px; }
+
+/* HUD */
+.hud { position: fixed; right: 18px; bottom: 14px; font: 600 13px var(--text); color: #6e6e73; letter-spacing: 0.06em; z-index: 5; user-select: none; }
+</style>
+</head>
+<body>
+
+<!-- 1 TITLE -->
+<section class="slide" id="s1">
+  <div class="kicker">Universal Celebration Hackathon · AWS Builder Loft · 19 Oct 2026</div>
+  <div class="spacer"></div>
+  <h1>Grantmother</h1>
+  <p class="lead" style="margin-top:48px;font-size:56px;">Giving small nonprofits the power of a grant-writing team.</p>
+  <p class="sub" style="margin-top:24px;font-size:40px;">A grant office that refuses to lie.</p>
+  <div class="spacer"></div>
+  <div class="footer"><span>Anthony Cardinale · Comfortist LLC</span><span>1 / 10</span></div>
+</section>
+
+<!-- 2 PROBLEM -->
+<section class="slide" id="s2">
+  <div class="kicker">The problem</div>
+  <h2>The money exists.<br>The grant writer doesn't.</h2>
+  <p class="lead">A small nonprofit is a founder and a cause. Finding the right funders, matching their rules, and writing a letter of inquiry is a full-time job nobody on staff has.</p>
+  <p class="sub" style="margin-top:36px;">So the ask never gets written. And when software writes it for them, it can make the organization sound bigger than it is. One invented number can cost a founder their credibility with a funder.</p>
+  <div class="footer"><span>Grantmother</span><span>2 / 10</span></div>
+</section>
+
+<!-- 3 SOLUTION -->
+<section class="slide" id="s3">
+  <div class="kicker">The solution</div>
+  <h2>A grant office<br>small nonprofits share.</h2>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-top:20px;">
+    <div class="card"><h3>Interviews</h3><p>A voice avatar takes the founder's story and builds a fact sheet the founder corrects.</p></div>
+    <div class="card"><h3>Finds</h3><p>Funders whose giving history matches, cut by eligibility rules.</p></div>
+    <div class="card"><h3>Drafts</h3><p>The letter of inquiry and budget, from the fact sheet only.</p></div>
+    <div class="card"><h3>Checks</h3><p>Every sentence against what the founder actually said. Then a human signs.</p></div>
+  </div>
+  <p class="sub" style="margin-top:48px;">Nothing is sent to a funder by the system. The founder approves, picks, and signs.</p>
+  <div class="footer"><span>Grantmother</span><span>3 / 10</span></div>
+</section>
+
+<!-- 4 HOW IT WORKS -->
+<section class="slide" id="s4" style="padding-top:90px;">
+  <div class="kicker" style="margin-bottom:24px;">How it works <span class="tag" style="margin-left:18px;vertical-align:middle;">Proposed architecture</span></div>
+  <h2 style="font-size:96px;margin-bottom:36px;">Six agents. One human.</h2>
+  <div class="grid pipe">
+    <div class="card"><div class="who">Masky</div><h3>Interviewer</h3><p>Voice intake. Produces the fact sheet everyone is bound to.</p></div>
+    <div class="card"><div class="who">Glasser</div><h3>Funder Scout</h3><p>Foundations and program officers. Capped, cost-visible lookups.</p></div>
+    <div class="card"><div class="who">Rules</div><h3>Fit Checker</h3><p>Geography, budget size, status, deadlines. Flags what a human decides.</p></div>
+    <div class="card"><div class="who">Model A</div><h3>Writer</h3><p>Drafts LOI and proposal sections from the fact sheet and funder profile.</p></div>
+    <div class="card"><div class="who">Model B via Flatkey</div><h3>Auditor</h3><p>Different model. Tags every claim by source. Blocks the unsupported.</p></div>
+    <div class="card"><div class="who">n8n + Flexprice</div><h3>Treasurer</h3><p>Budget table, deadline reminders, metering and billing.</p></div>
+  </div>
+  <div class="rail">
+    <div class="card"><p><strong>PromptQL</strong> backbone: rooms, bots over funder and budget sheets, a learning box with human approval.</p></div>
+    <div class="card"><p><strong>Ask the W</strong> governance: the "agent does / human decides" map, shown as a page.</p></div>
+    <div class="card" style="background:#ffffff;border-color:#ffffff;"><p style="color:#3a3a3e;"><strong style="color:#000000;">The founder</strong> approves the fact sheet, picks funders, approves learnings, and signs.</p></div>
+  </div>
+  <div class="footer" style="bottom:36px;"><span>Grantmother</span><span>4 / 10</span></div>
+</section>
+
+<!-- 5 AUDITOR MOMENT -->
+<section class="slide" id="s5">
+  <div class="kicker">The Auditor moment <span class="tag" style="margin-left:18px;vertical-align:middle;">Shown in the film · pipeline proposed</span></div>
+  <div class="audit-line" style="font-size:118px;margin-top:10px;">"Our program serves<br><span class="strike"><span class="num">2,000</span></span> students."</div>
+  <div style="margin-top:60px;display:flex;align-items:center;gap:44px;">
+    <span class="verdict">UNSUPPORTED</span>
+    <span style="font-family:var(--display);font-weight:900;font-size:64px;letter-spacing:-0.02em;">The intake said <span style="color:#ffffff;">600</span>.</span>
+  </div>
+  <p class="sub" style="margin-top:60px;">The Writer drafted it. The Auditor, on a different model, could not trace it to the interview, so the draft is blocked until the founder fixes the number. The checker can still miss errors; the human still signs.</p>
+  <div class="footer"><span>Grantmother</span><span>5 / 10</span></div>
+</section>
+
+<!-- 6 LIVE DEMO -->
+<section class="slide" id="s6">
+  <div class="kicker">What runs today <span class="tag live" style="margin-left:18px;vertical-align:middle;">Live</span></div>
+  <h2 style="font-size:104px;">A Masky avatar runs the intake.</h2>
+  <div class="cols">
+    <ol class="steps">
+      <li>The Masky avatar asks three questions in its own voice.</li>
+      <li>The founder answers by voice (or types).</li>
+      <li>Name, nonprofit, and purpose fill a live fact sheet.</li>
+      <li>The avatar closes, and the Grantmother film plays.</li>
+    </ol>
+    <div class="card" style="background:var(--subtle);">
+      <ul class="plain">
+        <li><strong>Running:</strong> Masky API avatar and conversation, browser speech capture, live fact sheet, the film.</li>
+        <li><strong>Designed:</strong> sponsor roles and the six-agent pipeline on the previous slides.</li>
+        <li><strong>Not yet built:</strong> Funder Scout, Fit Checker, Writer, Auditor, Treasurer. The film shows how they would work.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>Grantmother</span><span>6 / 10</span></div>
+</section>
+
+<!-- 7 SPONSORS -->
+<section class="slide" id="s7" style="padding-top:90px;">
+  <div class="kicker" style="margin-bottom:20px;">Sponsors and roles</div>
+  <h2 style="font-size:84px;margin-bottom:28px;">Every sponsor has a job.</h2>
+  <div class="rowlabel">Core: in the product path <span class="dim" style="letter-spacing:0.04em;text-transform:none;font-weight:400;">· Masky is live today; the rest are designed roles</span></div>
+  <div class="grid sponsors">
+    <div class="sp"><div class="logo"><img src="assets/masky-on-dark.png" alt="Masky"><span class="nm">Masky</span></div><p><strong style="color:#fff">Live:</strong> the Interviewer's face and voice.</p></div>
+    <div class="sp"><div class="logo"><img src="assets/promptql-on-dark.png" alt="PromptQL"></div><p>Backbone: rooms, bots, learning box.</p></div>
+    <div class="sp"><div class="logo"><img src="assets/glasser-on-dark.png" alt="Glasser"></div><p>Funder Scout: foundations and program officers.</p></div>
+    <div class="sp"><div class="logo"><img src="assets/flatkey-on-dark.png" alt="Flatkey"><span class="nm">Flatkey</span></div><p>Writer and Auditor on different models, one key.</p></div>
+    <div class="sp"><div class="logo"><img src="assets/n8n-on-dark.png" alt="n8n"></div><p>Deadline calendar, reminders, sheet sync.</p></div>
+    <div class="sp"><div class="logo"><img src="assets/flexprice-on-dark.png" alt="Flexprice"></div><p>Funder-match meter and success tier.</p></div>
+    <div class="sp"><div class="logo"><img src="assets/askthew-on-dark.png" alt="Ask the W"><span class="nm">Ask the W</span></div><p>Governance: agent does / human decides.</p></div>
+    <div class="sp" style="background:transparent;border-style:dashed;justify-content:center;"><p>7 core roles.<br>4 build roles below.</p></div>
+  </div>
+  <div class="rowlabel" style="margin-top:26px;">Build: how it gets shipped</div>
+  <div class="grid sponsors">
+    <div class="sp build"><div class="logo"><img src="assets/snyk-on-dark.png" alt="Snyk"></div><p>Code scan and Agent Scan.</p></div>
+    <div class="sp build"><div class="logo"><img src="assets/prelint-on-dark.png" alt="Prelint"></div><p>PRs vs a "no fabricated facts" spec.</p></div>
+    <div class="sp build"><div class="logo"><img src="assets/tenki-on-dark.png" alt="Tenki"></div><p>Sandbox and CI.</p></div>
+    <div class="sp build"><div class="logo"><img src="assets/celesto-on-dark.png" alt="CelestoAI"><span class="nm">CelestoAI</span></div><p>Sandbox for the Funder Scout.</p></div>
+  </div>
+  <div class="footer" style="bottom:30px;"><span>Grantmother</span><span>7 / 10</span></div>
+</section>
+
+<!-- 8 BUSINESS MODEL -->
+<section class="slide" id="s8">
+  <div class="kicker">Business model <span class="tag" style="margin-left:18px;vertical-align:middle;">Proposed</span></div>
+  <h2>Pay when it's worth it.</h2>
+  <div class="grid three">
+    <div class="card"><div class="big">Per match</div><p>Credits per matched funder, metered so the founder sees the cost of every lookup.</p></div>
+    <div class="card"><div class="big">On award</div><p>A success tier when a grant is won, so the office shares the outcome.</p></div>
+    <div class="card"><div class="big">Sliding</div><p>A sliding scale so the smallest organizations can afford a grant office.</p></div>
+  </div>
+  <p class="sub" style="margin-top:44px;">No pricing has been tested with customers yet. Billing would be metered through Flexprice.</p>
+  <div class="footer"><span>Grantmother</span><span>8 / 10</span></div>
+</section>
+
+<!-- 9 WHAT'S NEXT -->
+<section class="slide" id="s9">
+  <div class="kicker">What's next</div>
+  <h2>From intake<br>to signed letter.</h2>
+  <ol class="steps" style="max-width:1500px;">
+    <li>Writer and Auditor on two providers through Flatkey, with the source-tag rule that blocks unsupported claims.</li>
+    <li>Funder Scout on Glasser with a hard spend cap, plus the Fit Checker's eligibility rules.</li>
+    <li>PromptQL rooms and the human-approved learning box; n8n reminders; Flexprice metering in Stripe test mode.</li>
+    <li>A first pilot with one small nonprofit, with its permission.</li>
+  </ol>
+  <div class="footer"><span>Grantmother</span><span>9 / 10</span></div>
+</section>
+
+<!-- 10 THANKS -->
+<section class="slide" id="s10">
+  <div class="kicker">Thank you</div>
+  <div class="spacer"></div>
+  <h1 style="font-size:180px;">A grant office<br>that refuses to lie.</h1>
+  <div style="margin-top:64px;font-size:40px;line-height:1.6;">
+    <div><span class="muted">Code</span>&nbsp;&nbsp; https://github.com/cardinale/grantmother</div>
+    <div><span class="muted">Team</span>&nbsp;&nbsp; Anthony Cardinale · Comfortist LLC</div>
+    <div><span class="muted">Avatar</span>&nbsp;&nbsp; Interviewer powered by Masky.ai</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Grantmother · Universal Celebration Hackathon 2026</span><span>10 / 10</span></div>
+</section>
+
+<div class="hud" id="hud"></div>
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const hud = document.getElementById("hud");
+  let i = 0;
+  const fromHash = parseInt((location.hash || "").replace("#", ""), 10);
+  if (fromHash >= 1 && fromHash <= slides.length) i = fromHash - 1;
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    slides.forEach(el => { el.style.transform = "translate(-50%, -50%) scale(" + s + ")"; });
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((el, k) => el.classList.toggle("active", k === i));
+    hud.textContent = (i + 1) + " / " + slides.length + "  ·  ← →";
+    history.replaceState(null, "", "#" + (i + 1));
+  }
+  document.addEventListener("keydown", e => {
+    if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); show(i + 1); }
+    else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); show(i - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+  });
+  document.addEventListener("click", e => { show(e.clientX > window.innerWidth / 2 ? i + 1 : i - 1); });
+  window.addEventListener("resize", fit);
+  fit(); show(i);
+})();
+</script>
+</body>
+</html>

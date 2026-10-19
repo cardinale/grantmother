@@ -10,7 +10,7 @@ window.GRANTMOTHER_CONFIG = {
   AVATAR_IMAGE_URL: "assets/grantmother-interviewer.jpg",
   // Ask Masky for a personalized spoken closing line ("Got it, <name>...") live on stage.
   // Audio turns take ~5-10 s; if slower than PERSONAL_TIMEOUT_MS the generic closing clip plays.
-  LIVE_PERSONAL_CLOSER: true,
+  LIVE_PERSONAL_CLOSER: false,
   PERSONAL_TIMEOUT_MS: 12000,
   // Typed-fallback defaults: Space (or Enter) with an empty answer box fills these.
   DEFAULTS: {

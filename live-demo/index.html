@@ -334,6 +334,14 @@
 
   (async () => {
     await loadClips();
+    if (["q1", "q2", "q3", "closer"].every(k => clips[k]) && C.LIVE_PERSONAL_CLOSER === false) {
+      if (C.AVATAR_IMAGE_URL) {
+        img.src = C.AVATAR_IMAGE_URL; img.style.display = "block"; ph.style.display = "none";
+      }
+      setBadge("Masky clips loaded (4)", "ok");
+      setStatus("Ready. Press Space to begin.");
+      return;
+    }
     await maskyInit();
     if (Object.keys(clips).length) setBadge("Masky clips loaded (" + Object.keys(clips).length + ")", "ok");
     setStatus("Ready. Press Space to begin.");
