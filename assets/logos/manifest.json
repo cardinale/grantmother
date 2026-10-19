@@ -1,0 +1,184 @@
+{
+  "generated_at": "2026-10-19T23:15:08.316932+00:00",
+  "logos": [
+    {
+      "slug": "promptql",
+      "name": "PromptQL",
+      "kind": "wordmark",
+      "source_page": "https://promptql.io",
+      "source_url": "https://promptql.io/brand-assets/promptql-logo-black.svg",
+      "sha256_raw": "0acf08becc054ec514dff33d18ed8fc9a5a759232a75a07cf895ad4aa9786f22",
+      "files": {
+        "on_light": "promptql-on-light.png",
+        "on_dark": "promptql-on-dark.png",
+        "svg": "promptql.svg"
+      },
+      "derived": false,
+      "notes": " Official reverse source: promptql-promptql-logo-white.svg"
+    },
+    {
+      "slug": "glasser",
+      "name": "Glasser",
+      "kind": "wordmark",
+      "source_page": "https://glasser.ai/",
+      "source_url": "https://glasser.ai/_images/wordmark-nova-klasse-bb976a616f69.svg",
+      "sha256_raw": "bb976a616f69f982c5f5e2a4e885c179653055ba1111534f16d28215322761d5",
+      "files": {
+        "on_light": "glasser-on-light.png",
+        "on_dark": "glasser-on-dark.png",
+        "svg": "glasser.svg"
+      },
+      "derived": true,
+      "notes": " On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "flatkey",
+      "name": "Flatkey",
+      "kind": "icon",
+      "source_page": "https://flatkey.ai",
+      "source_url": "https://flatkey.ai/flatkey-mark.svg",
+      "sha256_raw": "f372fe700f6f59ac604a5b212cb24db311b4134feb0670492774cb139ac5d80a",
+      "files": {
+        "on_light": "flatkey-on-light.png",
+        "on_dark": "flatkey-on-dark.png",
+        "svg": "flatkey.svg"
+      },
+      "derived": true,
+      "notes": "Official header icon. Header wordmark is live HTML text, not vector artwork. On-dark is derived flat white from the original alpha shape. White key becomes transparent knockout in derived reverse, preserving internal detail."
+    },
+    {
+      "slug": "prelint",
+      "name": "Prelint",
+      "kind": "lockup",
+      "source_page": "https://prelint.com",
+      "source_url": "https://prelint.com/prelint-logo.svg",
+      "sha256_raw": "d258d7e8489768c139ea6dad2c263b5693131368bc1623fc58f112cb314b0116",
+      "files": {
+        "on_light": "prelint-on-light.png",
+        "on_dark": "prelint-on-dark.png",
+        "svg": "prelint.svg"
+      },
+      "derived": true,
+      "notes": " On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "celesto",
+      "name": "Celesto",
+      "kind": "icon",
+      "source_page": "https://celesto.ai",
+      "source_url": "https://ik.imagekit.io/gradsflow/celestoai/logo/celesto-logo_KDV0f6bxO.svg",
+      "sha256_raw": "4b913c5554f3824e8e24450a143351520e37c35ce8efcff4a1b4d815397d1d83",
+      "files": {
+        "on_light": "celesto-on-light.png",
+        "on_dark": "celesto-on-dark.png",
+        "svg": "celesto.svg"
+      },
+      "derived": true,
+      "notes": " On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "flexprice",
+      "name": "Flexprice",
+      "kind": "lockup",
+      "source_page": "https://flexprice.io/",
+      "source_url": "https://framerusercontent.com/images/991KORbL0sIyvQKYvanZ84t8Uus.png",
+      "sha256_raw": "5d3e374f7327882133a9733449027f168080ba23a27ea94f68ff95d8b9d54056",
+      "files": {
+        "on_light": "flexprice-on-light.png",
+        "on_dark": "flexprice-on-dark.png"
+      },
+      "derived": true,
+      "notes": "Official nav PNG, native 850x155; upscaled. Candidate SVG was MoEngage and rejected. On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "tenki",
+      "name": "Tenki",
+      "kind": "lockup",
+      "source_page": "https://tenki.cloud",
+      "source_url": "https://tenki.cloud",
+      "sha256_raw": "8e344ee5bd827b36abba40ff8be32a29942720a04713a7e3d0dde4ebe69d7ab3",
+      "files": {
+        "on_light": "tenki-on-light.png",
+        "on_dark": "tenki-on-dark.png",
+        "svg": "tenki.svg"
+      },
+      "derived": true,
+      "notes": "Unaltered inline SVG extracted from official homepage; raw HTML retained. sha256_raw hashes untouched source homepage HTML; SVG is an exact substring of that HTML. On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "aws",
+      "name": "AWS",
+      "kind": "lockup",
+      "source_page": "https://aws.amazon.com/",
+      "source_url": "https://aws.amazon.com/",
+      "sha256_raw": "ebed8ae832dd738580b84bafe17165fdff75cfa47529a401e468d16cb3274c19",
+      "files": {
+        "on_light": "aws-on-light.png",
+        "on_dark": "aws-on-dark.png",
+        "svg": "aws.svg"
+      },
+      "derived": true,
+      "notes": "Unaltered inline SVG extracted from official homepage; raw HTML retained. sha256_raw hashes untouched source homepage HTML; SVG is an exact substring of that HTML. On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "snyk",
+      "name": "Snyk",
+      "kind": "wordmark",
+      "source_page": "https://snyk.io",
+      "source_url": "https://res.cloudinary.com/snyk/image/upload/snyk-mktg-brandui/brand-logos/wordmark-light.svg",
+      "sha256_raw": "642ebec8a2c056fcb9ad43979b15e3f837c72e5419b41075bd4db8160b50fe28",
+      "files": {
+        "on_light": "snyk-on-light.png",
+        "on_dark": "snyk-on-dark.png",
+        "svg": "snyk.svg"
+      },
+      "derived": false,
+      "notes": "Located through official homepage brandui CSS. Filenames describe target surface (light=navy ink, dark=white ink). Official reverse source: snyk-wordmark-dark.svg"
+    },
+    {
+      "slug": "askthew",
+      "name": "Ask The W",
+      "kind": "icon",
+      "source_page": "https://askthew.com",
+      "source_url": "https://askthew.com/brand/icon/svg/mark-black.svg",
+      "sha256_raw": "f0d37af706e41e338df27f0ed15a994a491f06e0ffc591e5672fd59159395ed3",
+      "files": {
+        "on_light": "askthew-on-light.png",
+        "on_dark": "askthew-on-dark.png",
+        "svg": "askthew.svg"
+      },
+      "derived": true,
+      "notes": "Official standalone transparent mark. Lockups have baked backgrounds and live font dependencies, so excluded. On-dark is derived flat white from the original alpha shape."
+    },
+    {
+      "slug": "n8n",
+      "name": "n8n",
+      "kind": "lockup",
+      "source_page": "https://n8n.io",
+      "source_url": "https://n8n.io/brandguidelines/logo-dark.svg",
+      "sha256_raw": "9fd7dc879b2119f59fcd4055147257de08620c3db5722329a7d4d8fc502d592e",
+      "files": {
+        "on_light": "n8n-on-light.png",
+        "on_dark": "n8n-on-dark.png",
+        "svg": "n8n.svg"
+      },
+      "derived": false,
+      "notes": "Standalone official vector from https://n8n.io/brandguidelines/. Official reverse source: n8n-logo-white.svg"
+    },
+    {
+      "slug": "masky",
+      "name": "Masky",
+      "kind": "icon",
+      "source_page": "https://masky.ai",
+      "source_url": "https://masky.ai/images/compare/masky-mask.png",
+      "sha256_raw": "c865ffc58576252c2c5f2a7039ca7655704e571fb4669cc95a33c7fccae83aa3",
+      "files": {
+        "on_light": "masky-on-light.png",
+        "on_dark": "masky-on-dark.png"
+      },
+      "derived": true,
+      "notes": "Official transparent mask icon used in homepage Masky comparison columns. Native 96x96 only; upscaled to 1600px, visibly soft. Photo JPG rejected; no clean wordmark found. On-dark is derived flat white from the original alpha shape."
+    }
+  ],
+  "missing": []
+}

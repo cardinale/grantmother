@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grantmother — live intake</title>
+<script src="config.js"></script>
+<style>
+  :root {
+    --cobalt: #2f4fe0; --vermilion: #ef4423; --emerald: #12a05c; --lemon: #ffd81f;
+    --ink: #111216; --muted: #5d6170; --line: #e3e4ea;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #ffffff; color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif; overflow: hidden; }
+  .paper { position: fixed; z-index: 0; filter: drop-shadow(0 6px 0 rgba(0,0,0,.10)); }
+  .p1 { width: 340px; height: 340px; background: var(--cobalt); border-radius: 50%; top: -120px; left: -110px; }
+  .p2 { width: 260px; height: 160px; background: var(--lemon); top: 62%; left: -60px; transform: rotate(-12deg); border-radius: 18px 60px 18px 60px; }
+  .p3 { width: 200px; height: 200px; background: var(--vermilion); bottom: -70px; right: 18%; clip-path: polygon(50% 0, 100% 100%, 0 100%); transform: rotate(8deg); }
+  .p4 { width: 180px; height: 180px; background: var(--emerald); top: 10%; right: -60px; border-radius: 40% 60% 55% 45%; }
+  header { position: fixed; top: 22px; left: 0; right: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; }
+  .wordmark { font-weight: 800; font-size: 22px; letter-spacing: -.02em; color: #ffffff; }
+  .credit { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); background: #ffffff; padding: 6px 12px; border-radius: 999px; box-shadow: 0 2px 0 rgba(0,0,0,.08); }
+  .credit img { height: 26px; }
+  main { position: relative; z-index: 1; height: 100%; display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding: 90px 7vw 70px; }
+  .stage { position: relative; aspect-ratio: 1 / 1; max-height: 74vh; width: 100%; justify-self: center;
+    background: #ffffff; border-radius: 28px; overflow: hidden; border: 3px solid var(--ink); box-shadow: 10px 10px 0 var(--cobalt); }
+  .stage video, .stage img.avatar, .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; }
+  .stage .placeholder { position: absolute; inset: 0; display: grid; place-items: center; background: #ffffff; }
+  .stage .placeholder img { width: 46%; opacity: .9; }
+  .caption { position: absolute; left: 16px; right: 16px; bottom: 16px; background: #ffffff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 16px; font-size: clamp(16px, 1.7vw, 24px); font-weight: 600; line-height: 1.25; }
+  .badge { position: absolute; top: 14px; left: 14px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 5px 10px; border-radius: 999px; background: var(--ink); color: #ffffff; }
+  .badge.warn { background: var(--vermilion); }
+  .badge.ok { background: var(--emerald); }
+  .card { background: #ffffff; border: 3px solid var(--ink); border-radius: 22px; padding: 32px 34px; box-shadow: 10px 10px 0 var(--lemon); transform: rotate(.6deg); }
+  .card h2 { margin: 0 0 4px; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .card h1 { margin: 0 0 22px; font-size: clamp(26px, 2.6vw, 38px); letter-spacing: -.02em; }
+  .row { padding: 14px 0; border-top: 2px dashed var(--line); }
+  .row label { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .row .val { min-height: 1.3em; font-size: clamp(20px, 2vw, 30px); font-weight: 700; margin-top: 4px; }
+  .row .val.empty { color: #b9bcc8; font-weight: 500; }
+  .row.active { background: #eef1fd; margin: 0 -14px; padding: 14px; border-radius: 12px; border-top-color: transparent; }
+  .row .val.pop { animation: pop .45s ease; }
+  @keyframes pop { 0% { transform: scale(.94); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  .input { display: flex; gap: 10px; margin-top: 18px; }
+  .input input { flex: 1; font: inherit; font-size: 18px; padding: 12px 14px; border: 2px solid var(--ink); border-radius: 12px; background: #ffffff; }
+  .input button { font: inherit; font-weight: 700; font-size: 16px; padding: 12px 18px; border-radius: 12px; border: 2px solid var(--ink); background: var(--cobalt); color: #ffffff; cursor: pointer; }
+  .status { margin-top: 12px; font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 8px; min-height: 20px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #b9bcc8; }
+  .dot.live { background: var(--vermilion); animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+  footer { position: fixed; bottom: 14px; left: 0; right: 0; text-align: center; font-size: 12px; color: var(--muted); z-index: 2; }
+  kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; background: #ffffff; font-family: inherit; }
+  #film { position: fixed; inset: 0; z-index: 10; background: #000000; display: none; }
+  #film video { width: 100%; height: 100%; object-fit: contain; background: #000000; }
+  #film .loading { position: absolute; inset: 0; display: none; place-items: center; color: #ffffff; font-size: 28px; font-weight: 700; text-align: center; }
+  #film.show { display: block; }
+  .startHint { font-size: 18px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="paper p1"></div><div class="paper p2"></div><div class="paper p3"></div><div class="paper p4"></div>
+<header>
+  <div class="wordmark">Grantmother</div>
+  <div class="credit">Interviewer avatar by <img src="assets/masky-on-light.png" alt="Masky"> <strong>Masky.ai</strong></div>
+</header>
+<main>
+  <section class="stage" id="stage">
+    <div class="placeholder" id="placeholder"><img src="assets/masky-on-light.png" alt=""></div>
+    <img class="avatar" id="avatarImg" alt="" style="display:none">
+    <video id="avatarVid" playsinline style="display:none"></video>
+    <div class="badge" id="badge">Masky: checking…</div>
+    <div class="caption" id="caption"><span class="startHint">Press <kbd>Space</kbd> to begin.</span></div>
+  </section>
+  <section class="card">
+    <h2>Grantmother · intake</h2>
+    <h1>Fact sheet</h1>
+    <div class="row" data-k="name"><label>Your name</label><div class="val empty" id="v-name">—</div></div>
+    <div class="row" data-k="org"><label>Nonprofit</label><div class="val empty" id="v-org">—</div></div>
+    <div class="row" data-k="purpose"><label>What it does</label><div class="val empty" id="v-purpose">—</div></div>
+    <form class="input" id="form" autocomplete="off">
+      <input id="answer" placeholder="Speak, or type the answer and press Enter">
+      <button type="submit">Next</button>
+    </form>
+    <div class="status"><span class="dot" id="dot"></span><span id="status">Ready.</span></div>
+  </section>
+</main>
+<footer><kbd>Space</kbd> next step &nbsp;·&nbsp; <kbd>Enter</kbd> submit typed answer &nbsp;·&nbsp; <kbd>F</kbd> jump to film &nbsp;·&nbsp; <kbd>R</kbd> restart</footer>
+<div id="film"><video id="filmVid" playsinline controls></video><div class="loading" id="filmLoading">Film loading…<br><small id="filmMsg" style="font-weight:400;font-size:16px"></small></div></div>
+
+<script>
+(() => {
+  const C = window.GRANTMOTHER_CONFIG || {};
+  const LINES = C.LINES || {};
+  const API = "https://masky.ai/api";
+  const $ = (id) => document.getElementById(id);
+  const vid = $("avatarVid"), img = $("avatarImg"), ph = $("placeholder");
+  const badge = $("badge"), caption = $("caption"), statusEl = $("status"), dot = $("dot");
+  const answerEl = $("answer");
+  const facts = { name: "", org: "", purpose: "" };
+  const STEPS = [
+    { key: "q1", field: "name" }, { key: "q2", field: "org" }, { key: "q3", field: "purpose" }
+  ];
+  let step = -1;            // -1 = intro, 0..2 = questions, 3 = closer, 4 = film
+  let phase = "idle";       // idle | speaking | listening
+  let clips = {};           // key -> video URL (local file or Masky URL)
+  let masky = { ok: false, key: C.MASKY_API_KEY, avatar: null, conv: null };
+  let rec = null, recActive = false, autoTimer = null;
+
+  const log = (...a) => console.log("[grantmother]", ...a);
+  const setStatus = (t, live = false) => { statusEl.textContent = t; dot.classList.toggle("live", live); };
+  const setBadge = (t, cls = "") => { badge.textContent = t; badge.className = "badge " + cls; };
+
+  // ---------- Masky API ----------
+  async function mk(path, opts = {}) {
+    const r = await fetch(API + path, {
+      ...opts,
+      headers: { "Authorization": "Bearer " + masky.key, "Content-Type": "application/json", ...(opts.headers || {}) }
+    });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(path + " -> " + r.status + " " + JSON.stringify(body).slice(0, 200));
+    return body;
+  }
+  async function maskyInit() {
+    if (!masky.key) { setBadge("Masky: no key in config.js", "warn"); return; }
+    try {
+      const { avatars = [] } = await mk("/avatars");
+      masky.avatar = avatars.find(a => a.avatarId === C.AVATAR_ID) || avatars[0];
+      if (!masky.avatar) { setBadge("Masky: key ok, no avatar", "warn"); return; }
+      masky.ok = true;
+      setBadge("Masky: " + (masky.avatar.displayName || "avatar") + " connected", "ok");
+      const still = C.AVATAR_IMAGE_URL || masky.avatar.imageUrl || masky.avatar.primaryImageUrl;
+      if (still) { img.src = still; img.style.display = "block"; ph.style.display = "none"; }
+    } catch (e) { log(e); setBadge("Masky: " + e.message.slice(0, 60), "warn"); }
+  }
+  async function newConversation() {
+    if (masky.conv) return masky.conv;
+    masky.conv = await mk("/conversations", { method: "POST",
+      body: JSON.stringify({ avatarOwnerUserId: masky.avatar.avatarOwnerUserId, avatarId: masky.avatar.avatarId }) });
+    log("conversation", masky.conv.shareSlug);
+    return masky.conv;
+  }
+  // Speak a verbatim line via Masky; resolves with {audioUrl, videoUrl} or null on timeout.
+  async function maskySpeak(text, output, timeoutMs) {
+    const conv = await newConversation();
+    const { turn } = await mk(`/conversations/${conv.conversationId}/turn`, { method: "POST",
+      body: JSON.stringify({ userText: text, mode: "speak", output }) });
+    const t0 = Date.now();
+    while (Date.now() - t0 < timeoutMs) {
+      const d = await mk(`/conversations/by-slug/${conv.shareSlug}`);
+      const t = (d.turns || []).find(x => x.id === turn.id);
+      if (t && t.status === "error") throw new Error(t.errorMessage || "turn error");
+      if (t && (output === "video" ? t.videoUrl : t.audioUrl)) return t;
+      await new Promise(r => setTimeout(r, 1500));
+    }
+    return null;
+  }
+
+  // ---------- clips: prerendered local files first ----------
+  async function loadClips() {
+    try {
+      const r = await fetch("clips/manifest.json", { cache: "no-store" });
+      if (r.ok) { const m = await r.json(); for (const k of Object.keys(m.clips || {})) clips[k] = "clips/" + m.clips[k]; }
+    } catch (e) { /* no prerendered clips */ }
+    log("local clips", clips);
+  }
+  // Warm Masky URLs for any missing clip (scripted renders are cached by Masky across conversations).
+  async function warmMissing() {
+    if (!masky.ok) return;
+    for (const k of ["q1", "q2", "q3", "closer"]) {
+      if (clips[k] || !LINES[k]) continue;
+      setStatus("Preparing Masky clip " + k + " (first render can take ~60 s)…", true);
+      try { const t = await maskySpeak(LINES[k], "video", 120000); if (t) clips[k] = t.videoUrl; }
+      catch (e) { log("warm", k, e); }
+    }
+    setStatus(step < 0 ? "Ready. Press Space to begin." : statusEl.textContent);
+  }
+
+  // ---------- playback ----------
+  function playUrl(url, text, isAudio) {
+    return new Promise((resolve) => {
+      caption.textContent = text;
+      const el = isAudio ? new Audio() : vid;
+      if (!isAudio) { vid.style.display = "block"; img.style.display = "none"; ph.style.display = "none"; }
+      let done = false;
+      const fin = () => { if (done) return; done = true; if (!isAudio) { vid.style.display = "none"; if (img.src) img.style.display = "block"; else ph.style.display = "grid"; } resolve(true); };
+      el.onended = fin; el.onerror = () => { log("media error", url); done = true; resolve(false); };
+      el.src = url; el.currentTime = 0;
+      el.play().catch((e) => { log("play blocked", e); done = true; resolve(false); });
+      playUrl.cancel = () => { try { el.pause(); } catch (e) {} fin(); };
+    });
+  }
+  function browserTTS(text) {
+    return new Promise((resolve) => {
+      caption.textContent = text;
+      if (!("speechSynthesis" in window)) return resolve();
+      const u = new SpeechSynthesisUtterance(text); u.rate = 1.02;
+      u.onend = resolve; u.onerror = resolve;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+      playUrl.cancel = () => { speechSynthesis.cancel(); resolve(); };
+    });
+  }
+  async function say(key, text) {
+    phase = "speaking"; setStatus("Interviewer speaking…");
+    if (clips[key]) {
+      setBadge("Masky avatar", "ok");
+      if (await playUrl(clips[key], text)) return;
+    }
+    setBadge("Fallback voice (no Masky clip)", "warn");
+    await browserTTS(text);
+  }
+
+  // ---------- listening ----------
+  function startListening() {
+    phase = "listening"; answerEl.value = ""; answerEl.focus();
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { setStatus("No speech recognition here — type the answer, press Enter."); return; }
+    try {
+      rec = new SR(); rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+      rec.onresult = (ev) => {
+        let txt = ""; let final = false;
+        for (const r of ev.results) { txt += r[0].transcript; if (r.isFinal) final = true; }
+        answerEl.value = txt.trim();
+        if (final && answerEl.value) {
+          setStatus("Heard it. Advancing… (Space now to accept, or edit the text)");
+          clearTimeout(autoTimer); autoTimer = setTimeout(commitAnswer, 1600);
+        }
+      };
+      rec.onerror = (e) => { log("SR error", e.error); setStatus("Mic: " + e.error + " — type the answer, press Enter."); };
+      rec.onend = () => { recActive = false; dot.classList.remove("live"); };
+      rec.start(); recActive = true; setStatus("Listening… (or type, then Enter)", true);
+    } catch (e) { log(e); setStatus("Mic unavailable — type the answer, press Enter."); }
+  }
+  function stopListening() { clearTimeout(autoTimer); if (rec && recActive) { try { rec.stop(); } catch (e) {} } }
+
+  function clean(field, v) {
+    v = v.trim().replace(/[.。!]+$/, "");
+    if (field === "name") v = v.replace(/^(hi|hello|hey)[,!.]?\s+/i, "").replace(/^(my name is|my name's|i'm|i am|it's|this is)\s+/i, "");
+    if (field === "org") v = v.replace(/^(it's called|it is called|we're called|we are|it's|my nonprofit is|our nonprofit is)\s+/i, "");
+    return v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
+  }
+  function setFact(field, value) {
+    facts[field] = value;
+    const el = $("v-" + field);
+    el.textContent = value || "—"; el.classList.toggle("empty", !value);
+    el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
+  }
+  function highlight(field) { document.querySelectorAll(".row").forEach(r => r.classList.toggle("active", r.dataset.k === field)); }
+
+  function commitAnswer() {
+    if (phase !== "listening") return;
+    stopListening();
+    const f = STEPS[step].field;
+    const typed = answerEl.value.trim();
+    setFact(f, typed ? clean(f, typed) : ((C.DEFAULTS || {})[f] || ""));
+    answerEl.value = "";
+    phase = "idle";
+    next();
+  }
+
+  // ---------- flow ----------
+  async function runStep() {
+    if (step >= 0 && step < 3) {
+      const s = STEPS[step]; highlight(s.field);
+      const my = step;
+      await say(s.key, LINES[s.key]);
+      if (step === my && phase === "speaking") startListening();
+    } else if (step === 3) {
+      highlight(null);
+      const name = facts.name || "friend", org = facts.org || "your nonprofit";
+      const personal = `Got it, ${name}. Let me show you how Grantmother handles ${org}.`;
+      caption.textContent = personal;
+      let played = false;
+      if (masky.ok && C.LIVE_PERSONAL_CLOSER !== false) {
+        phase = "speaking"; setStatus("Masky is rendering a personal line…", true);
+        try {
+          const t = await maskySpeak(personal, "audio", C.PERSONAL_TIMEOUT_MS || 12000);
+          if (t && step === 3) { setBadge("Masky avatar · live line", "ok"); played = await playUrl(t.audioUrl, personal, true); }
+        } catch (e) { log("personal closer", e); }
+      }
+      if (!played && step === 3) {
+        if (clips.closer) await say("closer", LINES.closer);
+        else { phase = "speaking"; setBadge("Fallback voice (no Masky clip)", "warn"); await browserTTS(personal); }
+      }
+      if (step === 3) { step = 4; showFilm(); }
+    }
+  }
+  function next() {
+    if (playUrl.cancel && phase === "speaking") { const c = playUrl.cancel; playUrl.cancel = null; phase = "skip"; c(); if (step < 3) { startListening(); return; } }
+    if (phase === "listening" && step >= 0 && step < 3 && STEPS[step]) {
+      // Space while listening: commit what was heard/typed, or the expected default if empty
+      return commitAnswer();
+    }
+    if (step >= 3) { step = 4; return showFilm(); }
+    stopListening();
+    step += 1; phase = "idle"; runStep();
+  }
+
+  // ---------- film ----------
+  const film = $("film"), filmVid = $("filmVid"), filmLoading = $("filmLoading");
+  let filmTimer = null;
+  async function showFilm() {
+    stopListening(); if (playUrl.cancel) { try { playUrl.cancel(); } catch (e) {} }
+    try { speechSynthesis.cancel(); } catch (e) {}
+    step = 4; film.classList.add("show");
+    const url = C.FILM_URL || "../out/grantmother-film.mp4";
+    let ok = false;
+    try { const r = await fetch(url, { method: "HEAD", cache: "no-store" }); ok = r.ok; } catch (e) {}
+    if (!ok) {
+      filmLoading.style.display = "grid"; $("filmMsg").textContent = "waiting for " + url + " — retrying every 3 s";
+      clearTimeout(filmTimer); filmTimer = setTimeout(showFilm, 3000); return;
+    }
+    filmLoading.style.display = "none";
+    filmVid.src = url + "?t=" + Date.now();
+    filmVid.play().catch(() => {});
+    if (document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+  }
+
+  // ---------- input ----------
+  $("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (phase === "listening") commitAnswer(); else next();
+  });
+  document.addEventListener("keydown", (e) => {
+    const typing = document.activeElement === answerEl && answerEl.value.length > 0;
+    if (e.code === "Space" && !typing) { e.preventDefault(); next(); }
+    else if ((e.key === "f" || e.key === "F") && !typing && document.activeElement !== answerEl) { e.preventDefault(); showFilm(); }
+    else if ((e.key === "r" || e.key === "R") && document.activeElement !== answerEl) { location.reload(); }
+    else if (e.key === "Escape") { film.classList.remove("show"); clearTimeout(filmTimer); filmVid.pause(); }
+  });
+
+  // expose for testing
+  window.__gm = { facts, get step() { return step; }, get phase() { return phase; }, clips, masky, next, commitAnswer, showFilm };
+
+  (async () => {
+    await loadClips();
+    await maskyInit();
+    if (Object.keys(clips).length) setBadge("Masky clips loaded (" + Object.keys(clips).length + ")", "ok");
+    setStatus("Ready. Press Space to begin.");
+    warmMissing();
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Local credentials and environment
+live-demo/config.js
+.env
+.env.*
+!.env.example
+# Generated production artifacts
+*.blend
+*.blend1
+build/
+frames/
+frame_sequences/
+out/
+*.mp4
+*.wav
+# Small, explicitly reviewed clips can be unignored below.
+live-demo/clips/*.mp4
+# Runtime caches
+__pycache__/
+*.pyc
+.DS_Store
