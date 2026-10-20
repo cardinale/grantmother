@@ -51,7 +51,7 @@ def emission(name, color, strength=1.0):
 
 M_WHITE = principled("type_white", hexlin("f2f2f4"), rough=0.3)
 M_SIDE = principled("type_side", hexlin("8e8e93"), rough=0.4)
-M_FLOOR = principled("floor", hexlin("242426"), rough=0.32, spec=0.6)
+M_FLOOR = principled("floor", hexlin("242426"), rough=0.62, spec=0.35)
 E_WHITE = emission("hud_white", (1, 1, 1, 1), 1.0)
 E_GREY = emission("hud_grey", hexlin("9a9a9e"), 1.0)
 E_RULE = emission("hud_rule", hexlin("5a5a5f"), 1.0)
@@ -90,7 +90,8 @@ def flat(body, size, fnt=FS, mat=E_WHITE, spacing=1.0, align="CENTER", name=None
 def rule(w, h, mat=E_RULE, name="rule"):
     bpy.ops.mesh.primitive_plane_add(size=1)
     ob = bpy.context.active_object; ob.name = name
-    ob.scale = (w, h, 1); ob.rotation_euler = (math.pi / 2, 0, 0)
+    from mathutils import Matrix
+    ob.data.transform(Matrix.Diagonal((w, h, 1, 1))); ob.rotation_euler = (math.pi / 2, 0, 0)
     ob.data.materials.append(mat)
     return ob
 
@@ -205,8 +206,9 @@ for k, (ob, px) in enumerate(letters):
 cap_mn, cap_mx = bounds(letters[1][0])  # 'r' for x-height reference
 # tagline: flat HUD line under the title
 TAG = "A grant office that refuses to lie."
-tag = flat(TAG, 0.62, fnt=FM, mat=E_WHITE, spacing=1.05, name="tagline")
-tag_z = TITLE_Z - 1.25
+tag = flat(TAG, 0.95, fnt=FM, mat=E_WHITE, spacing=1.05, name="tagline")
+TAGW = width(tag)
+tag_z = TITLE_Z - 1.55
 f_tag = F(3.5)
 anim(tag, snap_in((0, -0.4, tag_z), f_tag, dur=3))
 tw = width(tag) if False else 12.6
@@ -216,12 +218,12 @@ def rule_fn(side):
         if f < f_tag: return None
         p = ease_out((f - f_tag) / 6)
         L = 3.2 * p
-        cx = side * (6.9 + L / 2)
-        return Vector((cx, -0.4, tag_z + 0.22)), [math.pi / 2, 0, 0], (max(L, 1e-4), 1, 1)
+        cx = side * (TAGW / 2 + 0.5 + L / 2)
+        return Vector((cx, -0.4, tag_z + 0.3)), [math.pi / 2, 0, 0], (max(L, 1e-4), 1, 1)
     return fn
 anim(ruleL, rule_fn(-1)); anim(ruleR, rule_fn(1))
 # small HUD annotation top-left of the title
-ann = flat("GRANT OFFICE  /  EST. HONESTY", 0.30, fnt=FS, mat=E_GREY, spacing=1.25, align="LEFT", name="ann")
+ann = flat("INTRODUCING", 0.30, fnt=FS, mat=E_GREY, spacing=1.25, align="LEFT", name="ann")
 anim(ann, snap_in((-9.6, -0.4, TITLE_Z + 3.45), F(1.6), dur=3))
 ann_rule = rule(1.0, 0.01, name="annrule")
 def annr(f):
@@ -314,24 +316,26 @@ anim(t40, snap_in((-8.5, SY - 0.4, k40_z + k40_h + 0.3), f_40k + 3, f_out=f_for 
 # FOR A  +  giant 4 / TH
 fora = hero("FOR A", 6.0, fnt=FBO, ext=0.25, name="fora")
 four = hero("4", 1.0, name="four")
-four.data.size = 9.5; four.data.extrude = 0.45 * 9.5 / 2.4 / 2.2; four.data.bevel_depth = 0.035 * 9.5 / 2.4 / 2.2
+_h = bounds(four)[1].z - bounds(four)[0].z
+_k = 7.0 / _h; four.data.size *= _k; four.data.extrude = 0.3 * four.data.size / 2.4 / 1.6; four.data.bevel_depth = 0.03 * four.data.size / 2.4 / 1.6
 fmn, fmx = bounds(four)
 four_w = fmx.x - fmn.x; four_h = fmx.z - fmn.z
-th = hero("TH", 2.4, name="th")
+th = hero("TH", 2.6, name="th")
 th_h = bounds(th)[1].z - bounds(th)[0].z
-four_x = 2.2; four_z = -1.6
-fora_x = four_x - four_w / 2 - 0.6 - 3.0
+TOT = 6.0 + 0.7 + four_w + 0.3 + 2.6
+four_x = -TOT / 2 + 6.0 + 0.7 + four_w / 2; four_z = -1.8
+fora_x = -TOT / 2 + 3.0
 fora_z = four_z
 anim(fora, slam_depth((fora_x, SY, fora_z), f_for + 1, dur=4, depth=30, rot0=(0, 0, 0.2)))
 anim(four, slam_drop((four_x, SY, four_z), f_fourth + 1, dur=4, height=18))
-anim(th, slam_depth((four_x + four_w / 2 + 0.25 + 1.2, SY, four_z + four_h - th_h), f_fourth + 3, dur=3, depth=24))
+anim(th, slam_depth((four_x + four_w / 2 + 0.3 + 1.3, SY, four_z + four_h - th_h), f_fourth + 3, dur=3, depth=24))
 t4 = flat("SCHOOL  04", 0.32, fnt=FS, mat=E_GREY, spacing=1.3, align="LEFT", name="t4")
-anim(t4, snap_in((four_x + four_w / 2 + 0.3, SY - 0.4, four_z + 0.15), f_fourth + 5))
+anim(t4, snap_in((fora_x - 3.0, SY - 0.4, four_z + 2.6), f_fourth + 5))
 r4 = rule(1.0, 0.012, mat=E_GREY, name="r4")
 def r4fn(f):
     if f < f_fourth + 4: return None
-    p = ease_out((f - f_fourth - 4) / 8); L = 4.5 * p
-    return Vector((four_x + four_w / 2 + 0.3 + L / 2, SY - 0.4, four_z + 0.75)), [math.pi / 2, 0, 0], (max(L, 1e-4), 1, 1)
+    p = ease_out((f - f_fourth - 4) / 8); L = 6.0 * p
+    return Vector((fora_x - 3.0 + L / 2, SY - 0.4, four_z + 2.4)), [math.pi / 2, 0, 0], (max(L, 1e-4), 1, 1)
 anim(r4, r4fn)
 
 # ================================================================= environment
@@ -356,11 +360,9 @@ def area(name, loc, target, energy, size):
     return link(ob)
 for cy in (0.0, SY):
     c = Vector((0, cy, 2.0))
-    area("key", (-16, cy - 14, 18), c, 2600, 6)
-    area("front", (-4, cy - 24, 6), c, 5200, 8)
-    area("rim", (6, cy + 10, 12), c, 7000, 3)
-    area("rim2", (-12, cy + 9, 4), c, 2600, 2)
-    area("top", (0, cy - 2, 16), c, 1400, 3)
+    area("key", (-16, cy - 14, 18), c, 3400, 6)
+    fr = area("front", (-4, cy - 24, 9), c, 4000, 10); fr.data.use_shadow = False
+    rm = area("rim", (6, cy + 10, 12), c, 8000, 3); rm.data.use_shadow = False
 
 world = bpy.data.worlds.new("w"); scene.world = world; world.use_nodes = True
 world.node_tree.nodes["Background"].inputs["Color"].default_value = GRAPHITE
@@ -395,21 +397,21 @@ def cam_at(f):
     if f < F_WHIP1:
         p = (f - F_WHIP0) / (F_WHIP1 - F_WHIP0)
         q = ease_in(p) * 0.85 + 0.15 * p
-        loc = Vector((lerp(-3.0, -2.0, q), lerp(-27, 48, q), lerp(1.0, 1.4, q)))
+        loc = Vector((lerp(-3.0, -4.0, q), lerp(-27, 46, q), lerp(1.0, 0.3, q)))
         look = Vector((lerp(0, 0, q), lerp(0, SY, q), lerp(1.6, 2.4, q)))
         return loc, look, None
     # stage B drift
     p = (f - F_WHIP1) / (F1 - F_WHIP1)
-    loc = Vector((lerp(-4.0, 3.0, ease_io(p)), lerp(50.0, 55.5, p), lerp(0.2, 1.4, p)))
+    loc = Vector((lerp(-4.0, 3.0, ease_io(p)), lerp(46.0, 50.5, p), lerp(0.3, 1.2, p)))
     look = Vector((lerp(-0.6, 0.6, p), SY, 2.0))
     # small forward push-ins on beats
-    for fb, amt in ((f_three1, 0.8), (f_one, 0.6), (f_40k, -1.2), (f_fourth, 1.6)):
+    for fb, amt in ((f_three1, 0.8), (f_one, 0.6), (f_40k, -1.2), (f_fourth, 0.4)):
         if f >= fb:
             loc.y += amt * ease_out((f - fb) / 10)
     # after the 4 lands, look shifts to center the "4"
     if f >= f_fourth:
         q = ease_io((f - f_fourth) / 10)
-        look.x = lerp(look.x, -0.4, q); look.z = lerp(look.z, 2.4, q)
+        look.x = lerp(look.x, 0.7, q); look.z = lerp(look.z, 1.9, q); loc.x -= 2.0 * q
     return loc, look, None
 
 # ================================================================= bake keyframes
@@ -476,5 +478,7 @@ if MODE == "test":
         t = time.time(); bpy.ops.render.render(write_still=True)
         print(f"RENDER frame {f}: {time.time() - t:.2f}s")
 else:
+    if len(argv) > 2:
+        scene.frame_start = int(argv[1]); scene.frame_end = int(argv[2])
     scene.render.filepath = os.path.join(OUTDIR, "f_#####")
     bpy.ops.render.render(animation=True)

@@ -73,7 +73,7 @@ Keyboard controls: **Space** next step / accept answer; **Enter** submit typed a
 - `docs/concept.md`: Grantmother concept and the original sponsor matrix.
 - `docs/film-bible.md`: kinetic film direction and production contract.
 - `film/scripts/`: copied production scripts, including kinetic sequences as they become available. These are production-source snapshots, not a portable one-command film build: they retain original workspace/font paths and depend on production assets excluded from Git. Audio generation uses Gemini credentials from the environment; assembly requires Pillow and FFmpeg; kinetic sequences require Blender.
-- `deck/`: pitch deck, when copied from the concurrent deck build. Open `/deck/` on the same local server.
+- `deck/`: pitch deck HTML and PDF. Open `/deck/` on the same local server.
 - `assets/logos/`: sponsor PNG variants and provenance manifest. Logos belong to their respective owners; inclusion does not imply endorsement.
 
 Film credits: **Blender kinetic type; Gemini TTS narration; Lyria 3.5 music.** The release identifies whether it contains the kinetic film or the earlier illustrated concept-film fallback.

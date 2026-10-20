@@ -18,3 +18,11 @@ live-demo/clips/*.mp4
 __pycache__/
 *.pyc
 .DS_Store
+
+# Reviewed small media exceptions
+!live-demo/clips/closer.mp4
+!live-demo/clips/hero-intro-masky-original.mp4
+!live-demo/clips/hero-intro.mp4
+!live-demo/clips/q1.mp4
+!live-demo/clips/q2.mp4
+!live-demo/clips/q3.mp4

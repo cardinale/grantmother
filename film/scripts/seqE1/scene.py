@@ -227,10 +227,13 @@ st = [empty(f"station{i}", None, (SX[i], YS[i], 0), (0, 0, ROT[i])) for i in ran
 
 def lights(i):
     c = Vector((SX[i], YS[i], 2.0))
-    for nm, off, en, sz in (("key", (-7, -10, 9), 3200, 5), ("fill", (8, -12, 3), 1300, 6),
-                            ("rim", (3, 8, 7), 4200, 3), ("top", (0, -2, 11), 900, 4)):
+    for nm, off, en, sz, sh in (("key", (-12, -3, 10), 3800, 5, True), ("fill", (12, -4, 4), 900, 8, False),
+                                ("rim", (3, 8, 7), 4200, 3, False)):
         ld = bpy.data.lights.new(nm + str(i), "AREA")
         ld.energy = en; ld.size = sz
+        ld.use_shadow = sh
+        if nm == "fill":
+            ld.specular_factor = 0.0
         ob = bpy.data.objects.new(nm + str(i), ld)
         ob.location = c + Vector(off)
         ob.rotation_euler = (c - ob.location).to_track_quat("-Z", "Y").to_euler()
@@ -240,9 +243,9 @@ for i in range(4):
 
 # ---- Station 1: PromptQL / SHARED WIKI / approved
 s = st[0]
-t_lessons = stand(text("LESSONS", FBO, width=3.0, extrude=0.12, bevel=0.012, align="LEFT", name="lessons"), s, (-4.6, 0, 3.15))
+t_lessons = stand(text("LESSONS", FB, width=3.0, extrude=0.16, bevel=0.022, align="LEFT", name="lessons"), s, (-4.6, 0, 3.15))
 slam(t_lessons, 78.4, back=7)
-lg1 = logo_plane("promptql", 3.3, s, (-2.95, 0.05, 4.75))
+lg1 = logo_plane("promptql", 3.0, s, (-3.1, 0.05, 4.7))
 pop(lg1, 79.96)
 t_shared = stand(text("SHARED", FB, width=5.0, extrude=0.55, bevel=0.04, align="LEFT", name="shared"), s, (-4.6, 0, 0.02))
 bpy.context.view_layer.update()
@@ -257,12 +260,12 @@ rule1 = box("rule1", (right_edge + 4.6, 0.01, 0.018), ((right_edge - 4.6) / 2, 0
 pop(rule1, 78.6)
 h1 = hud("FOUNDER APPROVES EVERY LEARNING", width=4.4, parent=s, loc=(right_edge, 0, 3.15), align="RIGHT", mat=E_WHITE)
 pop(h1, 82.44, dur=3)
-stamp = empty("stamp", s, (right_edge - 2.2, -1.2, 4.35), (0, math.radians(7), 0))
+stamp = empty("stamp", s, (right_edge - 1.9, -0.5, 4.55), (0, math.radians(7), 0))
 sw, shh = 4.3, 1.15
 for nm, sz, lc in (("t", (sw, 0.12, 0.1), (0, 0, shh / 2)), ("b", (sw, 0.12, 0.1), (0, 0, -shh / 2)),
                    ("l", (0.1, 0.12, shh + 0.1), (-sw / 2, 0, 0)), ("r", (0.1, 0.12, shh + 0.1), (sw / 2, 0, 0))):
     box("stampframe" + nm, sz, lc, M_WHITE, stamp)
-t_ap = stand(text("APPROVED", FB, width=2.9, extrude=0.14, bevel=0.012, align="LEFT", name="approved"), stamp, (-1.05, 0, -0.33))
+t_ap = stand(text("APPROVED", FB, width=2.9, extrude=0.25, bevel=0.02, align="LEFT", name="approved"), stamp, (-1.05, 0, -0.33))
 check("stampcheck", 0.62, stamp, (-1.55, 0, -0.32))
 drop(stamp, 82.72)
 
@@ -293,7 +296,7 @@ lg3 = logo_plane("flexprice", 3.4, s, (-3.0, 0.05, 4.85))
 pop(lg3, 85.96)
 t_met = stand(text("METERED", FB, width=6.8, extrude=0.55, bevel=0.04, align="LEFT", name="metered"), s, (-4.9, 0, 0.02))
 slam(t_met, 86.22)
-t_em = stand(text("EVERY MATCH,", FBO, width=4.6, extrude=0.2, bevel=0.015, align="LEFT", name="everymatch"), s, (-4.9, 0, 2.45))
+t_em = stand(text("EVERY MATCH,", FB, width=4.6, extrude=0.3, bevel=0.022, align="LEFT", name="everymatch"), s, (-4.9, 0, 2.45))
 slam(t_em, 86.74, back=6)
 rule3 = box("rule3", (10.4, 0.01, 0.018), (0.3, 0, 4.25), E_RULE, s)
 pop(rule3, 85.96)

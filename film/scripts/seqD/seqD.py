@@ -165,9 +165,15 @@ F_SEMI = font(FONT_SEMI)
 F_MED = font(FONT_MED)
 SP = SIZE * 0.26
 
+_c = make_text(",", F_BLACK, SIZE, EXT, BEV, "comma_probe", [M_WHITE])
+_c.rotation_euler = (math.pi / 2, 0, 0)
+LIFT = -bounds_world(_c)[0].z + 0.03   # keep the comma tail above the floor
+bpy.data.objects.remove(_c, do_unlink=True)
+print("LIFT", LIFT)
+
 def stand(ob, x):
     ob.rotation_euler = (math.pi / 2, 0, 0)
-    ob.location = (x, 0, 0)
+    ob.location = (x, 0, LIFT)
 
 t_we = make_text("We", F_BLACK, SIZE, EXT, BEV, "we", [M_WHITE]); stand(t_we, 0)
 mn, mx = bounds_world(t_we)
@@ -317,7 +323,8 @@ t600.rotation_euler = (math.pi / 2, 0, 0)
 t600.location = (0, 0, 0)
 mn6, mx6 = bounds_world(t600)
 w6 = mx6.x - mn6.x
-X600 = x2k_c - w6 / 2 - mn6.x
+X600 = mn2.x - mn6.x
+print("LAYOUT", X2K, W2K, X_END, CAP, w6)
 GAP = W2K - w6
 HOVER = CAP * 1.45
 vis(t600, [(FS, False), (T_600 - 5, True)])
@@ -327,10 +334,10 @@ key(t600, T_600 + 3, loc=Vector((X600, -0.6, HOVER + CAP * 0.02)))
 key(t600, T_600 + 6, loc=Vector((X600, -0.6, HOVER)))
 key(t600, T_SNIP - 4, loc=Vector((X600, -0.6, HOVER + CAP * 0.08)))   # wind-up
 key(t600, T_SNIP - 1, loc=Vector((X600, -0.6, CAP * 0.55)))
-key(t600, T_SNIP, loc=Vector((X600, -0.3, 0)), scale=(1.06, 0.86, 1))
-key(t600, T_SNIP + 2, loc=Vector((X600, -0.2, CAP * 0.03)), scale=(0.98, 1.04, 1))
-key(t600, T_SNIP + 4, loc=Vector((X600, 0, 0)), scale=(1, 1, 1))
-key(t600, T_FUND, loc=Vector((X600, 0, 0)))
+key(t600, T_SNIP, loc=Vector((X600, -0.3, LIFT)), scale=(1.06, 0.86, 1))
+key(t600, T_SNIP + 2, loc=Vector((X600, -0.2, LIFT + CAP * 0.03)), scale=(0.98, 1.04, 1))
+key(t600, T_SNIP + 4, loc=Vector((X600, 0, LIFT)), scale=(1, 1, 1))
+key(t600, T_FUND, loc=Vector((X600, 0, LIFT)))
 key(t600, FS, scale=(1, 1, 1))
 
 # students slides left into place after the snip
@@ -367,26 +374,28 @@ xWe_c = (0 + (bounds_world(t_serve)[1].x)) / 2
 SENT_C = X_END / 2
 SENT_C2 = X_END2 / 2
 # Writer beat: dolly along the sentence as it is drafted, low oblique
-shot(FS, xWe_c - 6, CAP * 0.55, 46, -22, 1.2)
-shot(T_WE + 4, xWe_c - 2, CAP * 0.55, 42, -18, 1.4)
-shot(T_SERVE + 20, xWe_c + 6, CAP * 0.55, 46, -14, 1.6)
-shot(T_2K - 6, x2k_c - 8, CAP * 0.6, 54, -10, 1.8)
-# admire the lie: slow orbit across 2,000, students arrives
-shot(T_2K + 3, x2k_c - 4, CAP * 0.6, 50, -9, 1.6)
-shot(T_ST + 6, x2k_c + 6, CAP * 0.6, 60, 4, 1.2)
-shot(T_AUD - 10, x2k_c + 10, CAP * 0.6, 62, 14, 1.0)
-# whip to the auditor: wide, whole sentence, from the other side
-shot(T_AUD - 2, SENT_C, CAP * 0.95, 84, 6, 4.0)
-shot(T_FLAT, SENT_C, CAP * 0.95, 82, 2, 4.2)
-shot(T_SCAN1, SENT_C + 2, CAP * 0.95, 80, -2, 4.0)
-shot(T_UNS + 8, x2k_c, CAP * 1.0, 70, -3, 3.2)
+xServe_c = (bounds_world(t_serve)[0].x + bounds_world(t_serve)[1].x) / 2
+shot(FS, xWe_c - 4, CAP * 0.5, 26, -30, 0.9)
+shot(T_WE + 4, xWe_c - 1, CAP * 0.5, 24, -26, 0.9)
+shot(T_SERVE + 20, xServe_c, CAP * 0.5, 24, -18, 1.0)
+shot(T_2K - 6, x2k_c - 3, CAP * 0.55, 26, -26, 0.8)
+# admire the lie: slow low orbit across 2,000, students arrives
+shot(T_2K + 3, x2k_c, CAP * 0.6, 20, -24, 0.7)
+shot(T_ST - 6, x2k_c + 2, CAP * 0.6, 22, -6, 0.7)
+shot(T_ST + 8, (x2k_c + X_END) / 2, CAP * 0.55, 30, 10, 0.8)
+shot(T_AUD - 6, (x2k_c + X_END) / 2 + 2, CAP * 0.55, 30, 24, 0.8)
+# whip to the auditor: wide, whole sentence
+shot(T_AUD, SENT_C, CAP * 0.9, 56, 10, 3.0)
+shot(T_FLAT, SENT_C, CAP * 0.9, 54, 4, 3.2)
+shot(T_SCAN1, SENT_C + 1, CAP * 0.9, 52, -4, 3.0)
+shot(T_UNS + 10, x2k_c + 1, CAP * 1.0, 38, -10, 2.2)
 # push in on the gap with 600 hanging above
-shot(T_600 + 6, x2k_c, CAP * 1.2, 58, -4, 2.4)
-shot(T_SNIP - 2, x2k_c, CAP * 1.1, 50, -3, 2.0)
-shot(T_SNIP + 6, x2k_c, CAP * 0.85, 52, -2, 2.0)
+shot(T_600 + 6, x2k_c, CAP * 1.25, 32, -12, 1.4)
+shot(T_SNIP - 2, x2k_c, CAP * 1.2, 29, -8, 1.2)
+shot(T_SNIP + 6, x2k_c + 2, CAP * 0.8, 31, -6, 1.2)
 # settle on the truth
-shot(T_600ST, SENT_C2, CAP * 0.75, 78, -6, 2.6)
-shot(FE, SENT_C2 + 1.5, CAP * 0.75, 74, -2, 2.4)
+shot(T_600ST, SENT_C2, CAP * 0.95, 50, -10, 1.6)
+shot(FE, SENT_C2 + 1, CAP * 0.95, 47, -5, 1.5)
 
 # camera shake on the snip (3-4 frames)
 for i, (dx, dz) in enumerate([(0.9, -0.7), (-0.7, 0.5), (0.45, -0.3), (-0.2, 0.15)]):
@@ -413,11 +422,11 @@ for ob in shards:
     key(ob, T_SNIP - 1, loc=c + crack * 1.6)
     # aim past the lens: target point near camera plane, offset sideways/up
     radial = Vector((c.x - IMPACT.x, 0, c.z - IMPACT.z))
-    off = Vector((radial.x * rng.uniform(0.6, 1.6) + rng.uniform(-6, 6), 0,
+    off = Vector((radial.x * rng.uniform(1.0, 2.6) + rng.uniform(-7, 7), 0,
                   radial.z * rng.uniform(0.6, 1.4) + rng.uniform(-3, 5)))
     tgt = CAMP + off + Vector((0, rng.uniform(-6, 8), 0))
     v = (tgt - c)
-    nfr = rng.uniform(9, 20)            # frames to reach the camera plane
+    nfr = rng.uniform(6, 15)            # frames to reach the camera plane
     vel = v / nfr
     rot_v = Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), rng.uniform(-1, 1))) * rng.uniform(0.15, 0.45)
     p = c + crack * 1.6
@@ -437,7 +446,7 @@ for ob in shards:
 fl = bpy.data.lights.new("flash", "POINT"); fl.color = (1, 1, 1)
 flo = bpy.data.objects.new("flash", fl); link(flo)
 flo.location = Vector((x2k_c, -4, CAP * 0.7))
-for f, e in ((FS, 0), (T_SNIP - 1, 0), (T_SNIP, 60000), (T_SNIP + 3, 8000), (T_SNIP + 7, 0)):
+for f, e in ((FS, 0), (T_SNIP - 1, 0), (T_SNIP, 0), (T_SNIP + 3, 0), (T_SNIP + 7, 0)):
     fl.energy = e; fl.keyframe_insert("energy", frame=f)
 
 # ------------------------------------------------------------ scan line (3D)
@@ -445,14 +454,14 @@ scan_mat = emission_mat("scan", (1, 1, 1, 1), 6.0)
 bpy.ops.mesh.primitive_plane_add(size=1)
 scan = bpy.context.active_object
 scan.data.materials.append(scan_mat)
-scan.scale = (0.12, 1, CAP * 1.5)
+scan.scale = (0.18, 1, CAP * 1.6)
 scan.rotation_euler = (math.pi / 2, 0, 0)
 vis(scan, [(FS, False), (T_SCAN0, True), (T_SCAN1 + 1, False)])
 key(scan, T_SCAN0, loc=Vector((-3, -1.2, CAP * 0.6)))
 key(scan, T_SCAN1, loc=Vector((X_END + 3, -1.2, CAP * 0.6)))
 set_interp(scan, "LINEAR", "location")
 # soft glow trail plane behind scan line
-glow_mat = emission_mat("scan_glow", (1, 1, 1, 1), 0.6)
+glow_mat = emission_mat("scan_glow", (1, 1, 1, 1), 1.2)
 bpy.ops.mesh.primitive_plane_add(size=1)
 glow = bpy.context.active_object
 glow.data.materials.append(glow_mat)
@@ -579,37 +588,37 @@ ML = 96
 RULE = 1.5
 # role tags (top-left)
 g1 = []
-g1.append(htext("WRITER", ML, 112, 34, F_SEMI, E_WHITE, track=1.15))
-g1.append(htext("·  model A", ML + 158, 112, 34, F_MED, E_GREY))
+g1.append(htext("WRITER", ML, 112, 46, F_SEMI, E_WHITE, track=1.15))
+g1.append(htext("·  model A", ML + 212, 112, 46, F_MED, E_GREY))
 for o in g1:
     pop(o, T_WRITER, T_AUD - 3, slide=-30)
-r1 = grow_line(ML, 132, ML + 380, 132, RULE, E_RULE, T_WRITER, T_WRITER + 8, hide_at=T_AUD - 3)
+r1 = grow_line(ML, 136, ML + 500, 136, RULE, E_RULE, T_WRITER, T_WRITER + 8, hide_at=T_AUD - 3)
 g2 = []
-g2.append(htext("AUDITOR", ML, 112, 34, F_SEMI, E_WHITE, track=1.15))
-g2.append(htext("·  model B", ML + 186, 112, 34, F_MED, E_GREY))
+g2.append(htext("AUDITOR", ML, 112, 46, F_SEMI, E_WHITE, track=1.15))
+g2.append(htext("·  model B", ML + 250, 112, 46, F_MED, E_GREY))
 for o in g2:
     pop(o, T_AUD, T_SNIP, slide=-30)
-grow_line(ML, 132, ML + 400, 132, RULE, E_RULE, T_AUD, T_AUD + 8, hide_at=T_SNIP)
+grow_line(ML, 136, ML + 540, 136, RULE, E_RULE, T_AUD, T_AUD + 8, hide_at=T_SNIP)
 
 # flatkey routing diagram (top centre)
-LX, LY, LH = 960, 110, 84
+LX, LY, LH = 960, 100, 110
 lg = logo(LX, LY, LH)
 pop(lg, T_FLAT - 4, T_UNS + 14)
-fk = htext("FLATKEY", LX, LY + 70, 20, F_SEMI, E_GREY, align="CENTER", track=1.3)
+fk = htext("FLATKEY", LX, LY + 86, 24, F_SEMI, E_GREY, align="CENTER", track=1.3)
 pop(fk, T_FLAT - 4, T_UNS + 14)
-grow_line(LX, LY + 86, 700, 196, 2, E_RULE, T_FLAT, T_FLAT + 7, hide_at=T_UNS + 14)
-grow_line(LX, LY + 86, 1220, 196, 2, E_WHITE, T_FLAT, T_FLAT + 7, hide_at=T_UNS + 14)
-ta = htext("model A", 700, 236, 28, F_MED, E_GREY, align="CENTER")
-tb = htext("model B", 1220, 236, 28, F_SEMI, E_WHITE, align="CENTER")
+grow_line(LX - 4, LY + 100, 680, 250, 2, E_RULE, T_FLAT, T_FLAT + 7, hide_at=T_UNS + 14)
+grow_line(LX + 4, LY + 100, 1240, 250, 2, E_WHITE, T_FLAT, T_FLAT + 7, hide_at=T_UNS + 14)
+ta = htext("model A", 680, 296, 38, F_MED, E_GREY, align="CENTER")
+tb = htext("model B", 1240, 296, 38, F_SEMI, E_WHITE, align="CENTER")
 for o in (ta, tb):
     pop(o, T_FLAT + 6, T_UNS + 14)
-na = htext("WRITER", 700, 268, 16, F_SEMI, E_DIM, align="CENTER", track=1.3)
-nb = htext("AUDITOR", 1220, 268, 16, F_SEMI, E_GREY, align="CENTER", track=1.3)
+na = htext("WRITER", 680, 330, 20, F_SEMI, E_DIM, align="CENTER", track=1.3)
+nb = htext("AUDITOR", 1240, 330, 20, F_SEMI, E_GREY, align="CENTER", track=1.3)
 for o in (na, nb):
     pop(o, T_FLAT + 8, T_UNS + 14)
 
 # scan readout
-sc = htext("CHECKING EVERY CLAIM AGAINST THE INTERVIEW", ML, 1000, 20, F_SEMI, E_GREY, track=1.25)
+sc = htext("CHECKING EVERY CLAIM AGAINST THE INTERVIEW", ML, 1010, 26, F_SEMI, E_GREY, track=1.25)
 pop(sc, T_SCAN0, T_SNIP)
 
 # UNSUPPORTED callout anchored to 2,000
@@ -620,30 +629,30 @@ def scr(co):
     return (v.x * W, (1 - v.y) * H)
 ax, ay = scr((x2k_c, -0.3, CAP * 1.02))
 print("2k anchor at UNS", ax, ay)
-UX, UY = ax - 250, max(ay - 120, 330)
-u1 = htext("UNSUPPORTED", UX, UY, 46, F_SEMI, E_RED, track=1.12)
-u2 = htext("INTAKE SAID: 600", UX, UY + 46, 30, F_SEMI, E_WHITE, track=1.12)
-ur = grow_line(UX, UY + 14, UX + 500, UY + 14, 2, E_RED, T_UNS, T_UNS + 5, hide_at=T_600 - 6)
+UX, UY = ax - 260, max(ay - 130, 420)
+u1 = htext("UNSUPPORTED", UX, UY, 62, F_SEMI, E_RED, track=1.12)
+u2 = htext("INTAKE SAID: 600", UX, UY + 58, 38, F_SEMI, E_WHITE, track=1.12)
+ur = grow_line(UX, UY + 16, UX + 520, UY + 16, 2, E_RED, T_UNS, T_UNS + 5, hide_at=T_600 - 6)
 pop(u1, T_UNS, T_600 - 6, slide=-40)
 pop(u2, T_UNS + 3, T_600 - 6, slide=-40)
 # after camera push: re-anchor the callout higher-left, persistent until the snip
 scene.frame_set(T_600 + 4)
-ax2, ay2 = scr((mn2.x, -0.3, CAP * 0.5))
+ax2, ay2 = scr((x2k_c, -0.3, -0.2))
 print("2k left anchor at 600", ax2, ay2)
-VX, VY = 110, 560
-v1 = htext("UNSUPPORTED", VX, VY, 40, F_SEMI, E_RED, track=1.12)
-v2 = htext("INTAKE SAID: 600", VX, VY + 44, 28, F_SEMI, E_WHITE, track=1.12)
+VX, VY = ax2, min(ay2 + 70, 960)
+v1 = htext("UNSUPPORTED", VX, VY, 56, F_SEMI, E_RED, align="CENTER", track=1.12)
+v2 = htext("INTAKE SAID: 600", VX, VY + 52, 36, F_SEMI, E_WHITE, align="CENTER", track=1.12)
 vis(v1, [(FS, False), (T_600 - 6, True), (T_SNIP, False)])
 vis(v2, [(FS, False), (T_600 - 6, True), (T_SNIP, False)])
 
 # TRUE + and still worth funding
 scene.frame_set(T_TRUE)
-bx, by = scr((x2k_c, -0.3, CAP * 1.05))
+bx, by = scr((mn2.x + w6 / 2, -0.3, CAP * 1.05))
 print("600 anchor at TRUE", bx, by)
-tr = htext("TRUE", bx, max(by - 40, 200), 54, F_SEMI, E_WHITE, align="CENTER", track=1.25)
+tr = htext("TRUE", bx, max(by - 40, 200), 66, F_SEMI, E_WHITE, align="CENTER", track=1.25)
 pop(tr, T_TRUE)
-trl = grow_line(bx - 70, max(by - 40, 200) + 18, bx + 70, max(by - 40, 200) + 18, 2, E_WHITE, T_TRUE, T_TRUE + 5)
-fund = htext("and still worth funding", W / 2, 905, 104, F_BOLD, E_WHITE, align="CENTER")
+trl = grow_line(bx - 90, max(by - 40, 200) + 22, bx + 90, max(by - 40, 200) + 22, 2, E_WHITE, T_TRUE, T_TRUE + 5)
+fund = htext("and still worth funding", W / 2, 920, 128, F_BOLD, E_WHITE, align="CENTER")
 pop(fund, T_FUND)
 fund_loc = fund.location.copy()
 key(fund, T_FUND, loc=fund_loc + Vector((0, -40 * UPX, 0)), scale=(1.0, 1.0, 1))
