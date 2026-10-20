@@ -252,7 +252,7 @@ rows = [  # label, text, size, z, type start frame, chars per frame
 ]
 TYPE = []
 lines = []
-float_off = [(-0.4, -1.4, 0.05, -3), (0.6, 0.9, -0.05, 2.5), (-0.2, -0.6, 0.0, -1.5), (0.3, 0.2, 0.0, 1.5)]
+float_off = [(0.7, -0.2, -0.25, -2), (0.6, 0.5, -0.5, 2), (0.3, -0.1, -0.1, -1.5), (0.4, 0.2, 0.0, 1.5)]
 for i, (lab, body, sz, z, f0, cpf) in enumerate(rows):
     ob = text(body, F_BOLD, sz, 0.035, 0.006, M_LINE, "LEFT", "fact%d" % i)
     ob.rotation_euler = (math.pi / 2, 0, 0)

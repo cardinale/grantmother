@@ -4,7 +4,7 @@
 
 An AI-native grant-writing co-op for nonprofits too small to hire a grant writer.
 
-**Anthony Cardinale · Comfortist LLC**
+**Anthony Cardinale · Brad Anderson · Comfortist LLC**
 “Giving small nonprofits the power of a grant-writing team”
 
 Universal Celebration Hackathon · AWS Builder Loft · October 19, 2026.
@@ -47,7 +47,9 @@ cp live-demo/config.example.js live-demo/config.js
 
 Edit `live-demo/config.js`: add your Masky key to `MASKY_API_KEY`. The example retains the demo's `AVATAR_ID`; replace it with an avatar available to your account if needed. The key-bearing file is ignored by Git. Keep this a local demo: its browser configuration exposes the key to anyone who can access the server.
 
-Pre-render the question clips with your Masky account (this makes generation calls and may consume credits):
+Small pre-rendered Masky question clips are included. After copying the example configuration, you can play those clips with the key left blank; the personalized closing line requires a live Masky connection.
+
+To generate question clips for your own avatar, run the helper with your Masky account (this makes generation calls and may consume credits):
 
 ```sh
 python3 live-demo/prerender.py
